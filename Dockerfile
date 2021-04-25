@@ -24,22 +24,19 @@ RUN set -ex \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         mopidy \
-        mopidy-soundcloud \
-        mopidy-spotify \
     # Clean-up
  && apt-get purge --auto-remove -y \
         gcc \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache
 
-COPY Pipfile Pipfile.lock /
-
-RUN set -ex \
- && pipenv install --system --deploy
-
 RUN set -ex \
  && mkdir -p /var/lib/mopidy/.config \
  && ln -s /config /var/lib/mopidy/.config/mopidy
+
+RUN set -ex \
+ && pip3 install mopidy-iris \
+ && pip3 install mopidy-tidal
 
 # Start helper script.
 COPY entrypoint.sh /entrypoint.sh
